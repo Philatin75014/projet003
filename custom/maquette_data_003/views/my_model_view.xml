@@ -1,0 +1,48 @@
+<odoo>
+    <!-- Vue formulaire pour model.gapws -->
+    <record id="view_modelgapws_form" model="ir.ui.view">
+        <field name="name">modelgapws.form</field>
+        <field name="model">model.gapws</field>  <!-- Assurez-vous que le nom est correct ici -->
+        <field name="arch" type="xml">
+            <form string="Model Gapws">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="value"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vue liste pour model.gapws -->
+    <record id="view_modelgapws_tree" model="ir.ui.view">
+        <field name="name">modelgapws.tree</field>
+        <field name="model">model.gapws</field>  <!-- Assurez-vous que le nom du modèle est correct ici -->
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="value"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Action pour accéder à la vue de model.gapws -->
+    <record id="action_model_gapws" model="ir.actions.act_window">
+        <field name="name">Model Gapws</field>
+        <field name="res_model">model.gapws</field>  <!-- Le modèle lié à l'action -->
+        <field name="view_mode">tree,form</field>    <!-- Vue liste (tree) et formulaire (form) -->
+        <field name="help" type="html">
+            <p>
+                Cet écran permet de gérer les enregistrements du modèle Gapws.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu principal -->
+    <menuitem id="menu_model_gapws_root" name="Gestion Gapws" sequence="10" />
+
+    <!-- Sous-menu pour accéder à la vue de liste de "model.gapws" -->
+    <menuitem id="menu_model_gapws" name="Model Gapws" parent="menu_model_gapws_root"
+              action="action_model_gapws" sequence="10" />
+</odoo>

@@ -1,0 +1,14 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_campagne,campagne.campagne,model_campagne_campagne,campagne.campagne_manager,1,1,1,1
+access_campagne_log_line,campagne.log.line,model_campagne_log_line,campagne.campagne_manager,1,1,1,1
+access_campagne_log,campagne.log,model_campagne_log,campagne.campagne_manager,1,1,1,1
+access_cible,campagne.cible,model_campagne_cible,campagne.cible_manager,1,1,1,1
+access_canal,campagne.canal,model_campagne_canal,campagne.canal_manager,1,1,1,1
+access_offre,campagne.offre,model_campagne_offre,campagne.offre_manager,1,1,1,1
+access_offre_cost,campagne.offre.cost,model_campagne_offre_cost,campagne.offre_manager,1,1,1,1
+access_levier,campagne.levier,model_campagne_levier,campagne.levier_manager,1,1,1,1
+access_comite,campagne.comite,model_campagne_comite,campagne.comite_manager,1,1,1,1
+access_comite_sysmarlig,campagne.comite.sysmarlig,model_campagne_comite_sysmarlig,campagne.comite_manager,1,1,1,1
+access_synchro_wizard,synchro.wizard,model_synchro_wizard,campagne.data_manager,1,1,1,1
+access_export_wizard,export.wizard,model_export_wizard,campagne.data_manager,1,1,1,1
+access_export_ops,export.ops,model_export_ops,campagne.data_manager,1,1,1,0

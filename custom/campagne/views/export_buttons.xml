@@ -1,0 +1,57 @@
+<odoo>
+    <data>
+        <record id="view_campagne_form_inherit_button" model="ir.ui.view">
+            <field name="name">campagne.form.inherit.button</field>
+            <field name="model">campagne.campagne</field>
+            <field name="inherit_id" ref="campagne.view_campagne_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/*[1]" position="before">
+                    <header>
+                        <button name="%(action_export_wizard)d" type="action" string="Export Donalig"/>
+                    </header>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_campagne_tree_inherit_button" model="ir.ui.view">
+            <field name="name">campagne.tree.inherit.button</field>
+            <field name="model">campagne.campagne</field>
+            <field name="inherit_id" ref="campagne.view_campagne_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="inside">
+                    <header>
+                        <button name="%(action_export_wizard)d" type="action" string="Export Donalig"/>
+                    </header>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_offre_form_inherit_button" model="ir.ui.view">
+            <field name="name">offre.form.inherit.button</field>
+            <field name="model">campagne.offre</field>
+            <field name="inherit_id" ref="campagne.view_offre_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/*[1]" position="before">
+                    <header>
+                        <button name="%(action_export_wizard)d" type="action" string="Export Donalig"/>
+                        <button type="object" name="export_qty" string="Export quantités"/>
+                    </header>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_offre_tree_inherit_button" model="ir.ui.view">
+            <field name="name">offre.tree.inherit.button</field>
+            <field name="model">campagne.offre</field>
+            <field name="inherit_id" ref="campagne.view_offre_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="inside">
+                    <header>
+                        <button name="%(action_export_wizard)d" type="action" string="Export Donalig"/>
+                        <button type="object" name="export_qty" string="Export quantités"/>
+                    </header>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
