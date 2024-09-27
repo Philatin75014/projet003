@@ -3,7 +3,9 @@ from simple_salesforce import Salesforce
 import requests
 from dotenv import load_dotenv
 
+env_path = 'C:/tom/.env'
 load_dotenv(override=True)
+load_dotenv(dotenv_path=env_path, override=True)
 
 class sf_api:
     """

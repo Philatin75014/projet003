@@ -9,6 +9,22 @@ def test_get_source_mpa_data():
     # Affiche les résultats
     print(result)
 
+def test_get_source_donalig():
+    # Appelle la fonction que tu veux tester
+    result = utils.datasource.executequerySOQL("000")
+    # Affiche les résultats
+    print(result)
+
+def test_get_source_sysmarlig():
+    # Appelle la fonction que tu veux tester
+    result = utils.datasource.executequery_oracle_sysmarlig("069")
+    # Affiche les résultats
+    print(result)
+
+
+
 # Appelle la fonction de test
 if __name__ == '__main__':
     test_get_source_mpa_data()
+    test_get_source_donalig() 
+    test_get_source_sysmarlig()

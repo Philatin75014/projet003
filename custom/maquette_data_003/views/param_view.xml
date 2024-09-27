@@ -4,7 +4,7 @@
         <field name="name">param.canal.campagne.offre.tree</field>
         <field name="model">param.canal.campagne.offre</field>
         <field name="arch" type="xml">
-            <tree>
+               <tree create="false" edit="false" delete="false" duplicate="false">
                 <header>
                     <!-- Bouton visible directement au-dessus de la liste -->
                     <button name="manual_reload_data" string="Recharger Données" type="object" class="btn-primary"/>
@@ -30,7 +30,7 @@
         <field name="model">param.canal.campagne.offre</field>
         <field name="priority" eval="16"/> <!-- Priorité plus élevée -->
         <field name="arch" type="xml">
-            <form string="Param Canal Campagne Offre">
+            <form string="Param Canal Campagne Offre" create="false" edit="false" delete="false" duplicate="false">
                 <sheet>
                     <group>
                         <!--<field name="type_canal"/> -->
