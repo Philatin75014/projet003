@@ -1,0 +1,56 @@
+<odoo>
+    <!-- Vue tree -->
+    <record id="view_comite_reference_tree" model="ir.ui.view">
+        <field name="name">comite.reference.tree</field>
+        <field name="model">comite.reference</field>
+        <field name="arch" type="xml">
+            <tree string="Comites"  edit="false" delete="false" duplicate="false">
+                <header>
+                    <button name="button_refresh_data" type="object" string="Rafraîchir" class="btn-primary"/>
+                </header>           
+                <field name="code_comite"/>
+                <field name="nom"/>
+                <field name="cible"/>
+                <field name="date_migration_donalig"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vue form -->
+    <record id="view_comite_reference_form" model="ir.ui.view">
+        <field name="name">comite.reference.form</field>
+        <field name="model">comite.reference</field>
+        <field name="arch" type="xml">
+            <form string="Comites"  create="false" edit="false" delete="false" duplicate="false">
+                <group>
+                    <button name="button_refresh_data" type="object" string="Rafraîchir" class="btn-primary"/>
+                    <field name="code_comite"/>
+                    <field name="nom"/>
+                    <field name="cible"/>
+                    <field name="date_migration_donalig"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_comite_reference" model="ir.actions.act_window">
+        <field name="name">Comite Reference</field>
+        <field name="res_model">comite.reference</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+     <!-- Action contextuelle -->
+    <record id="action_refresh_comite_reference" model="ir.actions.server">
+        <field name="name">Rafraîchir</field>
+        <field name="model_id" ref="model_comite_reference"/>
+        <field name="binding_model_id" ref="model_comite_reference"/>
+        <field name="state">code</field>
+        <field name="code">action = model.button_refresh_data()</field>
+    </record>
+
+
+    <!-- Menu -->
+    <menuitem id="menu_comite_reference" name="Comite Reference"
+              parent="menu_param_canal_campagne_offre_root" action="action_comite_reference" sequence="30"/>
+</odoo>

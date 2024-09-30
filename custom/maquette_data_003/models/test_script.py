@@ -21,6 +21,13 @@ def test_get_source_sysmarlig():
     # Affiche les résultats
     print(result)
 
+def test_get_comites_data():
+    # Appelle la fonction que tu veux tester
+    result = utils.datasource.get_comites_data()
+    # Affiche les résultats
+    print(result)
+
+
 
 
 # Appelle la fonction de test
@@ -28,3 +35,4 @@ if __name__ == '__main__':
     test_get_source_mpa_data()
     test_get_source_donalig() 
     test_get_source_sysmarlig()
+    test_get_comites_data()

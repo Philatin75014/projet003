@@ -1,0 +1,39 @@
+<!-- fichier: prestataire_reference_views.xml -->
+<odoo>
+    <!-- Vue tree -->
+    <record id="view_prestataire_reference_tree" model="ir.ui.view">
+        <field name="name">prestataire.reference.tree</field>
+        <field name="model">prestataire.reference</field>
+        <field name="arch" type="xml">
+            <tree string="Prestataires" create="false" edit="false" delete="false" duplicate="false">
+                <field name="libelle_source"/>
+                <field name="code_source"/>                
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vue form -->
+    <record id="view_prestataire_reference_form" model="ir.ui.view">
+        <field name="name">prestataire.reference.form</field>
+        <field name="model">prestataire.reference</field>
+        <field name="arch" type="xml">
+            <form string="Prestataires" create="false" edit="false" delete="false" duplicate="false">
+                <group>
+                    <field name="libelle_source"/>
+                    <field name="code_source"/>                    
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_prestataire_reference" model="ir.actions.act_window">
+        <field name="name">Prestataire Reference</field>
+        <field name="res_model">prestataire.reference</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+ <!-- Sous-menu pour accéder aux données de prestataire.reference -->
+    <menuitem id="menu_prestataire_reference" name="Prestataire Reference"
+              parent="menu_param_canal_campagne_offre_root" action="action_prestataire_reference" sequence="20"/>              
+</odoo>

@@ -89,6 +89,33 @@ def get_source_mpa_data():
     # Retourner les données sous forme de dictionnaire
     return df.to_dict(orient='records')
 
+def get_comites_data():
+    query = '''
+    SELECT 
+    CODE_COMITE,
+    NOM,
+    CASE 
+        WHEN IS_MIG_DONALIG = 1 THEN 'DONALIG'
+        ELSE 'SYSMARLIG'
+    END AS 'CIBLE',
+    ISNULL(FORMAT(DATA_MIG_DONALIG, 'dd/MM/yyyy'), 'NON') AS 'DATE_MIGRATION_DONALIG'
+FROM 
+    PWS.COMITE
+ORDER BY 
+    CODE_COMITE;
+
+    '''
+    # Connexion SQLAlchemy à ta base de données SQL Server (ou une autre source)
+    engine = open_sqlalchemy_connectionGESFLUX()
+
+    # Utiliser un bloc with pour gérer proprement la connexion
+    with engine.connect() as conn:
+        # Exécuter la requête avec pandas
+        df = pd.read_sql(query, conn)
+
+    # Retourner les données sous forme de dictionnaire
+    return df.to_dict(orient='records')
+
 
 
 # Fonction pour insérer une ligne dans la table SQL via sqlalchemy
