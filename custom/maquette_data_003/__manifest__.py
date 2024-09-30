@@ -5,7 +5,6 @@
     'summary': 'Gestion des aiguillages',
     'depends': ['base','account','mail'],
     'data': [
-        'views/my_model_view.xml',  
         'views/param_view.xml',
         'views/prestataire_reference_view.xml',
         'views/comite_reference_view.xml',

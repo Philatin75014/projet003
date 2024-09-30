@@ -28,12 +28,12 @@
 
     <!-- Action -->
     <record id="action_prestataire_reference" model="ir.actions.act_window">
-        <field name="name">Prestataire Reference</field>
+        <field name="name">Prestataires Street</field>
         <field name="res_model">prestataire.reference</field>
         <field name="view_mode">tree,form</field>
     </record>
 
  <!-- Sous-menu pour accéder aux données de prestataire.reference -->
-    <menuitem id="menu_prestataire_reference" name="Prestataire Reference"
+    <menuitem id="menu_prestataire_reference" name="Prestataires Street"
               parent="menu_param_canal_campagne_offre_root" action="action_prestataire_reference" sequence="20"/>              
 </odoo>

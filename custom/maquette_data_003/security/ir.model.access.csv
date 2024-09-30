@@ -1,5 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_model_gapws_admin,model.gapws,model_model_gapws,base.group_system,1,1,1,1
 access_param_canal_campagne_offre_admin,param.canal.campagne.offre,model_param_canal_campagne_offre,base.group_system,1,1,1,1
 access_prestataire.reference_admin,prestataire.reference,model_prestataire_reference,base.group_system,1,1,1,1
 access_prestataire_reference,access.prestataire.reference,model_prestataire_reference,base.group_user,1,1,1,1

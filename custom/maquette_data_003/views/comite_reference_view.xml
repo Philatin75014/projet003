@@ -4,14 +4,11 @@
         <field name="name">comite.reference.tree</field>
         <field name="model">comite.reference</field>
         <field name="arch" type="xml">
-            <tree string="Comites"  edit="false" delete="false" duplicate="false">
-                <header>
-                    <button name="button_refresh_data" type="object" string="Rafraîchir" class="btn-primary"/>
-                </header>           
-                <field name="code_comite"/>
-                <field name="nom"/>
-                <field name="cible"/>
-                <field name="date_migration_donalig"/>
+            <tree string="Comites" create="false"  edit="false" delete="false" duplicate="false">
+                <field name="code_comite" string="Code du Comité"/>
+                <field name="nom" string="Département"/>
+                <field name="cible" string="Environnement ciblé"/>
+                <field name="date_migration_donalig" string="Date de migration vers Donalig"/>
             </tree>
         </field>
     </record>
@@ -21,13 +18,12 @@
         <field name="name">comite.reference.form</field>
         <field name="model">comite.reference</field>
         <field name="arch" type="xml">
-            <form string="Comites"  create="false" edit="false" delete="false" duplicate="false">
+            <form string="Comités"  create="false" edit="false" delete="false" duplicate="false">
                 <group>
-                    <button name="button_refresh_data" type="object" string="Rafraîchir" class="btn-primary"/>
-                    <field name="code_comite"/>
-                    <field name="nom"/>
-                    <field name="cible"/>
-                    <field name="date_migration_donalig"/>
+                    <field name="code_comite" string="Code du Comité"/>
+                    <field name="nom" string="Département"/>
+                    <field name="cible" string="Environnement ciblé"/>
+                    <field name="date_migration_donalig" string="Date de migration vers Donalig"/>
                 </group>
             </form>
         </field>
@@ -35,22 +31,13 @@
 
     <!-- Action -->
     <record id="action_comite_reference" model="ir.actions.act_window">
-        <field name="name">Comite Reference</field>
+        <field name="name">Comités</field>
         <field name="res_model">comite.reference</field>
         <field name="view_mode">tree,form</field>
     </record>
 
-     <!-- Action contextuelle -->
-    <record id="action_refresh_comite_reference" model="ir.actions.server">
-        <field name="name">Rafraîchir</field>
-        <field name="model_id" ref="model_comite_reference"/>
-        <field name="binding_model_id" ref="model_comite_reference"/>
-        <field name="state">code</field>
-        <field name="code">action = model.button_refresh_data()</field>
-    </record>
-
-
+   
     <!-- Menu -->
-    <menuitem id="menu_comite_reference" name="Comite Reference"
+    <menuitem id="menu_comite_reference" name="Comités"
               parent="menu_param_canal_campagne_offre_root" action="action_comite_reference" sequence="30"/>
 </odoo>

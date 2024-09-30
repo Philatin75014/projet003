@@ -1,2 +1,3 @@
-from . import my_model_gapws
+from . import prestataire_reference
+from . import comite_reference
 from . import paramcanalcampagneoffre
