@@ -1,5 +1,11 @@
+import sys
+import os
+# Ajouter le répertoire courant au chemin Python
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 import csv
 import pandas as pd
+#import simple_salesforce
 from sqlalchemy import text
 from .connexion_bdd import open_connection
 from .connexion_bdd import open_sqlalchemy_connectionGESFLUX
@@ -49,7 +55,7 @@ def get_param_canal_campagne_offre_data(code_comite):
            [CODE_OFFRE], [DATE_DEBUT_OPE], [DATE_FIN_OPE]
     FROM [PWS].[PARAM_CANAL_CAMPAGNE_OFFRE]
     WHERE   
-    [TYPE_CANAL] = 'PAS'
+    [TYPE_CANAL] = 'PAS' order by DATE_FIN_OPE desc 
      '''
     else :    
         query = '''
@@ -59,7 +65,7 @@ def get_param_canal_campagne_offre_data(code_comite):
     FROM [PWS].[PARAM_CANAL_CAMPAGNE_OFFRE]
     WHERE 
     [TYPE_CANAL] = 'PAS' AND
-    [CODE_COMITE] = :code_comite
+    [CODE_COMITE] = :code_comite order by DATE_FIN_OPE desc 
     '''
     
     # Ouvrir une connexion SQLAlchemy
@@ -76,7 +82,7 @@ def get_param_canal_campagne_offre_data(code_comite):
 def get_source_mpa_data():
     query = '''
     SELECT CODE_SOURCE, LIBELLE_SOURCE
-    FROM PWS.SOURCE_MPA
+    FROM PWS.SOURCE_MPA WHERE CODe_SOURCE LIKE 'P%'
     '''
     # Connexion SQLAlchemy à ta base de données SQL Server (ou une autre source)
     engine = open_sqlalchemy_connectionGESFLUX()
@@ -94,6 +100,7 @@ def get_comites_data():
     SELECT 
     CODE_COMITE,
     NOM,
+    CODE_COMITE+' '+NOM AS CODE_COMITE_NOM,
     CASE 
         WHEN IS_MIG_DONALIG = 1 THEN 'DONALIG'
         ELSE 'SYSMARLIG'

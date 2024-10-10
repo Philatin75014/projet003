@@ -4,13 +4,17 @@
         <field name="name">param.canal.campagne.offre.tree</field>
         <field name="model">param.canal.campagne.offre</field>
         <field name="arch" type="xml">
-            <tree string=" " edit="false" delete="false" duplicate="false">
+            <tree string="Missions existantes" edit="false" delete="false" duplicate="false">
+                <header>
+                </header>
                 <field name="type_canal_label"/>
-                <field name="code_source_label" string="Source"/>
-                <field name="code_comite"/>
+                <!--<field name="code_source_label" string="Source"/>-->
+                <field name="code_source" string="Code Source"/>
+                <!--<field name="code_comite"/>-->
+                   <!-- Afficher le champ combiné code_comite_nom dans la vue tree -->
+                <field name="comite_selection" />
                 <field name="code_mission_offre"/>
-                <!--<field name="code_campagne"/>-->
-                <field name="code_offre"/>
+                <!--<field name="code_offre"/>-->
                 <field name="date_debut_ope"/>
                 <field name="date_fin_ope"/>
             </tree>
@@ -24,30 +28,27 @@
             <form string="Paramétrage Canal">
                 <sheet>
                     <group>
-                        <!-- Champ pour afficher le code source et le libellé calculé -->
-                        <field name="code_source" options="{'no_create': True}" string="Code Source"/>
-                        <field name="code_source_label" string="Source Label" readonly="1"/>
-                        
-                        <!-- Champ pour afficher le comité sélectionné -->
-                        <field name="code_comite" options="{'no_create': True}" string="Comité"/>
-
-                        <!-- Libellé du type de canal calculé -->
                         <field name="type_canal_label" readonly="1"/>
-                        
-                        <!-- Autres champs modifiables -->
+                        <!--<field name="code_source" options="{'no_create': True}" string="Code Source" modifiers="{'readonly': [('id', '!=', False)]}"/>-->
+                        <!--<field name="code_source_label" string="Source " readonly="1"/>-->
+                        <field name="code_source" options="{'no_create': True}" string="Code Source"/>
+                        <!--<field name="code_source_label" string="Source" readonly="1"/>-->
+                        <!--<field name="code_comite" options="{'no_create': True}" string="Comité" modifiers="{'readonly': [('id', '!=', False)]}"/>-->
+                          <!-- Liste déroulante pour la sélection du comité -->
+                        <field name="comite_selection"/>
                         <field name="code_mission_offre"/>
-                        <field name="code_offre"/>
+                        <!--<field name="code_offre"/>-->
                         <field name="date_debut_ope"/>
                         <field name="date_fin_ope"/>
                     </group>
-
                 </sheet>
             </form>
         </field>
     </record>
+
     <!-- Action pour accéder à la vue de param.canal.campagne.offre -->
     <record id="action_param_canal_campagne_offre" model="ir.actions.act_window">
-        <field name="name">Param Canal Campagne Offres</field>
+        <field name="name">Missions existantes</field>
         <field name="res_model">param.canal.campagne.offre</field>
         <field name="view_mode">tree,form</field>
     </record>
@@ -56,6 +57,17 @@
     <menuitem id="menu_param_canal_campagne_offre_root" name="Gestion des missions" sequence="10"/>
 
     <!-- Sous-menu pour accéder aux données de param.canal.campagne.offre -->
-    <menuitem id="menu_param_canal_campagne_offre" name="Aiguillages existants"
+    <menuitem id="menu_param_canal_campagne_offre" name="Missions existantes"
               parent="menu_param_canal_campagne_offre_root" action="action_param_canal_campagne_offre" sequence="10"/>
+
+    <!-- Optionnel : vous pouvez créer un sous-menu pour le rafraîchissement des données -->
+    <record id="action_refresh" model="ir.actions.act_window">
+        <field name="name">Rafraîchir les données</field>
+        <field name="res_model">refresh</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>  <!-- Cela ouvre le wizard dans une nouvelle fenêtre -->
+    </record>
+
+    <menuitem id="menu_action_refresh" name="Rafraîchir les données"
+              parent="menu_param_canal_campagne_offre_root" action="action_refresh" sequence="20"/>
 </odoo>

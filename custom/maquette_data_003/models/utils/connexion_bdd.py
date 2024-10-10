@@ -3,7 +3,7 @@ import os
 import urllib
 from sqlalchemy import create_engine
 from sqlalchemy.engine import URL
-from .utils import sf_api
+from .utils_sf import sf_api
 
 def open_connection():
 # Récupérer le mot de passe depuis la variable d'environnement

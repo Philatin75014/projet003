@@ -20,7 +20,8 @@
             <form string="Prestataires" create="false" edit="false" delete="false" duplicate="false">
                 <group>
                     <field name="libelle_source"/>
-                    <field name="code_source"/>                    
+                    <field name="code_source"/>  
+                      
                 </group>
             </form>
         </field>

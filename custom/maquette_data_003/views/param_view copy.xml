@@ -1,0 +1,98 @@
+<odoo>
+    <!-- Vue liste pour param.canal.campagne.offre -->
+    <record id="view_param_canal_campagne_offre_tree" model="ir.ui.view">
+        <field name="name">param.canal.campagne.offre.tree</field>
+        <field name="model">param.canal.campagne.offre</field>
+          <field name="arch" type="xml">
+            <tree string="nom tree " edit="false" delete="false" duplicate="false">
+                <header>
+                       <button name="manual_reload_data" string="Rafraichir" type="object" class="btn-primary"/>
+                </header>
+                <field name="type_canal_label"/>
+                <field name="code_source_label" string="Source"/>
+                <field name="code_comite"/>
+                <field name="code_mission_offre"/>
+                <!--<field name="code_campagne"/>-->
+                <field name="code_offre"/>
+                <field name="date_debut_ope"/>
+                <field name="date_fin_ope"/>
+            </tree>
+        </field>
+    </record>
+
+<record id="view_param_canal_campagne_offre_reload_form" model="ir.ui.view">
+    <field name="name">param.canal.campagne.offre.reload.form</field>
+    <field name="model">param.canal.campagne.offre</field>
+    <field name="arch" type="xml">
+        <form string="Rafraichir les données" create="false" edit="false" delete="false" duplicate="false" options="{'no_create': True, 'no_edit': True}">
+            <header>
+                <button name="manual_reload_data" type="object" string="Rafraîchir" class="btn-primary"/>
+            </header>
+            <sheet>
+                <group>
+                      <!-- Ajouter d'autres champs si nécessaire -->
+                
+                </group>
+            </sheet>
+        </form>
+    </field>
+</record>
+
+<!-- Action pour accéder à la vue de param.canal.campagne.offre -->
+    <record id="action_param_canal_campagne_offre_reload" model="ir.actions.act_window">
+        <field name="name">Param Canal Campagne Offres reload</field>
+        <field name="res_model">param.canal.campagne.offre</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_param_canal_campagne_offre_reload_form"/>
+    </record>
+
+    <!-- Sous-menu pour accéder aux données de param.canal.campagne.offre -->
+    <menuitem id="menu_param_canal_campagne_offre_reload" name="Rafraichir les données"
+              parent="menu_param_canal_campagne_offre_root" action="action_param_canal_campagne_offre_reload" sequence="50"/>
+
+    <record id="view_param_canal_campagne_offre_form" model="ir.ui.view">
+        <field name="name">param.canal.campagne.offre.form</field>
+        <field name="model">param.canal.campagne.offre</field>
+        <field name="arch" type="xml">
+            <form string="Paramétrage Canal">
+                <sheet>
+                    <group>
+                        <!-- Libellé du type de canal calculé -->
+                        <field name="type_canal_label" readonly="1"/>
+                        <!-- Champ pour afficher le code source et le libellé calculé -->
+                        <!--<field name="code_source" options="{'no_create': True}" string="Code Source"/>-->
+                        <field name="code_source" options="{'no_create': True}" string="Code Source" modifiers="{'readonly': [('id', '!=', False)]}"/>
+                        <field name="code_source_label" string="Source " readonly="1"/>
+                        
+                        <!-- Champ pour afficher le comité sélectionné -->
+                        <!--<field name="code_comite" options="{'no_create': True}" string="Comité"/>-->
+                        <field name="code_comite" options="{'no_create': True}" string="Comité" modifiers="{'readonly': [('id', '!=', False)]}"/>
+
+                        
+                        <!-- Autres champs modifiables -->
+                        <field name="code_mission_offre"/>
+                        <field name="code_offre"/>
+                        <field name="date_debut_ope"/>
+                        <field name="date_fin_ope"/>
+                        <button name="manual_reload_data" string="Charger Données" type="object" class="btn-primary"/>
+
+                    </group>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- Action pour accéder à la vue de param.canal.campagne.offre -->
+    <record id="action_param_canal_campagne_offre" model="ir.actions.act_window">
+        <field name="name">Param Canal Campagne Offres</field>
+        <field name="res_model">param.canal.campagne.offre</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu principal -->
+    <menuitem id="menu_param_canal_campagne_offre_root" name="Gestion des missions" sequence="10"/>
+
+    <!-- Sous-menu pour accéder aux données de param.canal.campagne.offre -->
+    <menuitem id="menu_param_canal_campagne_offre" name="Aiguillages existants"
+              parent="menu_param_canal_campagne_offre_root" action="action_param_canal_campagne_offre" sequence="10"/>
+</odoo>

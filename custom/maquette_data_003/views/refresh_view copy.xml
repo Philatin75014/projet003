@@ -1,0 +1,31 @@
+<odoo>
+    <record id="view_refresh" model="ir.ui.view">
+        <field name="name">refresh.form</field>
+        <field name="model">refresh</field>
+        <field name="arch" type="xml">
+            <form string="Rafraîchir les données">
+                <group>
+                    <field name="confirmation"/>
+                </group>
+                <footer>
+                    <button string="Rafraîchir" type="object" name="action_refresh_data" class="btn-primary"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_refresh" model="ir.actions.act_window">
+        <field name="name">Rafraîchir les données</field>
+        <field name="res_model">refresh</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>  <!-- Cela ouvre le wizard dans une nouvelle fenêtre -->
+    </record>
+
+    <record id="menu_action_refresh" model="ir.ui.menu">
+        <field name="name">Rafraîchir les données</field>
+        <field name="action" ref="action_refresh"/>
+        <field name="parent_id" ref="menu_param_canal_campagne_offre_root"/>
+        <field name="sequence" eval="50"/>
+    </record>
+</odoo>

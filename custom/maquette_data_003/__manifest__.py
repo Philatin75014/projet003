@@ -8,6 +8,7 @@
         'views/param_view.xml',
         'views/prestataire_reference_view.xml',
         'views/comite_reference_view.xml',
+        'views/refresh_view.xml',
         'security/ir.model.access.csv',
     ],
     'installable': True,
