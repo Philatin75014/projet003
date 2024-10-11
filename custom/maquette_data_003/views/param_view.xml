@@ -37,6 +37,8 @@
                           <!-- Liste déroulante pour la sélection du comité -->
                         <field name="comite_selection"/>
                         <field name="code_mission_offre"/>
+                        <field name="libelle_total_mission_offre" />
+
                         <!--<field name="code_offre"/>-->
                         <field name="date_debut_ope"/>
                         <field name="date_fin_ope"/>

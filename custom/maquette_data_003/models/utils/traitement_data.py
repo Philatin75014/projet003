@@ -24,21 +24,40 @@ def filtrer_donnees_par_code_comite(donnees, code_comite):
     
     return donnees_filtrees
 
-def filtrer_offres_aiguillables(offres,aiguillages_existants):
-    """Retourne la liste des offres n''ayant pas deja un aiguillage""" 
-    dfOffres = pd.DataFrame(offres) 
+def filtrer_offres_aiguillables(aiguillages_existants,offres):
+    """Retourne la liste des offres n'ayant pas déjà un aiguillage"""
+    
+    # Créer des DataFrames à partir des offres et aiguillages existants
+    dfOffres = pd.DataFrame(offres)
     dfAiguillages = pd.DataFrame(aiguillages_existants)
+
+    # Vérifier si l'un des DataFrames est vide avant la fusion
+    if dfOffres.empty:
+        print("Le DataFrame des offres est vide")
+        return offres  # Retourner les offres telles quelles si dfOffres est vide
+
+    if dfAiguillages.empty:
+        print("Le DataFrame des aiguillages existants est vide")
+        return offres  # Retourner les offres si dfAiguillages est vide
+
+    # Harmoniser la casse des colonnes (passer en majuscules pour tout uniformiser)
+    dfOffres.rename(columns=str.upper, inplace=True)
+    dfAiguillages.rename(columns=str.upper, inplace=True)
+
     # Effectuer une jointure externe uniquement sur les colonnes 'code_campagne' et 'code_offre'
-    merged_df = pd.merge(dfOffres, dfAiguillages, on=['CODE_COMITE','CODE_CAMPAGNE', 'CODE__MISSION_OFFRE'], how='outer', indicator=True)
-    # Filtrer les lignes présentes uniquement dans df1 (left_only)
+    merged_df = pd.merge(dfOffres, dfAiguillages, on=['CODE_COMITE', 'CODE_CAMPAGNE', 'CODE_MISSION_OFFRE'], how='outer', indicator=True)
+
+    # Filtrer les lignes présentes uniquement dans dfOffres (left_only)
     difference_df = merged_df[merged_df['_merge'] == 'left_only']
-    # Ne conserver que les colonnes de df1 (qui sont toutes les colonnes du dictionnaire d'origine)
-    # Cela évite de renvoyer les colonnes inutiles comme '_merge' ou celles de df2.
+
+    # Ne conserver que les colonnes de dfOffres
     dfOffresAiguillables = difference_df[dfOffres.columns]
-        # Convertir le DataFrame résultant en dictionnaire (liste de dictionnaires)
+
+    # Convertir le DataFrame résultant en dictionnaire (liste de dictionnaires)
     resultat = dfOffresAiguillables.to_dict(orient='records')
 
     return resultat
+
     
 
 

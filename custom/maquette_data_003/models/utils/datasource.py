@@ -11,6 +11,8 @@ from .connexion_bdd import open_connection
 from .connexion_bdd import open_sqlalchemy_connectionGESFLUX
 from .connexion_bdd import open_oracle_connectionSYSMARLIG
 from .connexion_bdd import open_saleforce_connectionDONALIG
+from .traitement_data import filtrer_donnees_par_code_comite
+from .traitement_data import filtrer_offres_aiguillables
 
 def lire_donnees_csv(fichier_csv):
     """ Lire des données à partir d'un fichier CSV """
@@ -94,6 +96,46 @@ def get_source_mpa_data():
 
     # Retourner les données sous forme de dictionnaire
     return df.to_dict(orient='records')
+
+def get_source_list_offre_potentielles(code_comite):
+    #futur routage on cherche dans donalig ou sysmarlig
+    #pour le moment uniquement sysmarlig
+    #on va charger la liste dans la base sysmarlig
+    Aiguillages_existants_comite =get_param_canal_campagne_offre_data(code_comite)
+    print(Aiguillages_existants_comite)
+    Offres_potentielles_comite = get_source_list_offre_sysmarlig_data(code_comite)
+    print(Offres_potentielles_comite)
+    return filtrer_offres_aiguillables(Aiguillages_existants_comite,Offres_potentielles_comite)
+
+
+def get_source_list_offre_sysmarlig_data(code_comite):
+    query = '''
+    SELECT  
+        code_comite as CODE_COMITE,
+        cod_campagne as CODE_CAMPAGNE,
+        code_off as CODE_MISSION_OFFRE,
+        off_libelle,
+        cod_campagne || ' ' || code_off || ' ' || off_libelle AS libelle_total
+    FROM offre  
+    WHERE cod_campagne LIKE '%BFP800'  
+    AND CODE_OFF LIKE 'E0D%' 
+    AND code_comite = :code_comite
+    ORDER BY cod_campagne DESC
+    '''
+    
+    # Connexion à la base Oracle via SQLAlchemy
+    engine = open_oracle_connectionSYSMARLIG()
+
+    # Utiliser un bloc with pour gérer proprement la connexion
+    with engine.connect() as conn:
+        # Exécuter la requête en utilisant la méthode `text` pour Oracle
+        df = pd.read_sql(text(query), conn, params={"code_comite": code_comite})
+
+    # Retourner les données sous forme de dictionnaire
+    return df.to_dict(orient='records')
+
+
+
 
 def get_comites_data():
     query = '''
