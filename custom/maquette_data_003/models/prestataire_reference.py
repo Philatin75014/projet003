@@ -7,6 +7,8 @@ from .utils.datasource import get_source_mpa_data  # Import depuis le sous-répe
 class PrestataireReference(models.TransientModel):
         _name = 'prestataire.reference'
         _description = 'Prestataire Reference'
+        _rec_name='libelle_source'  
+
     
         code_source = fields.Char(string='Code Source', required=True,unique=True)
         libelle_source = fields.Char(string='Libellé Source', required=True)

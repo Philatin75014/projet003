@@ -10,6 +10,7 @@
                 </header>
                 <field name="type_canal_label"/>
                 <field name="code_source_label" string="Source"/>
+                
                 <field name="code_comite"/>
                 <field name="code_mission_offre"/>
                 <!--<field name="code_campagne"/>-->

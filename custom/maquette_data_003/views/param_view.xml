@@ -10,6 +10,7 @@
                 <field name="type_canal_label"/>
                 <!--<field name="code_source_label" string="Source"/>-->
                 <field name="code_source" string="Code Source"/>
+                            
                 <!--<field name="code_comite"/>-->
                    <!-- Afficher le champ combiné code_comite_nom dans la vue tree -->
                 <field name="comite_selection" />
@@ -32,6 +33,9 @@
                         <!--<field name="code_source" options="{'no_create': True}" string="Code Source" modifiers="{'readonly': [('id', '!=', False)]}"/>-->
                         <!--<field name="code_source_label" string="Source " readonly="1"/>-->
                         <field name="code_source" options="{'no_create': True}" string="Code Source"/>
+                        <!--<field name="prest_id" />-->
+                        <field name="prest_id" options="{'no_create': True}"/>
+
                         <!--<field name="code_source_label" string="Source" readonly="1"/>-->
                         <!--<field name="code_comite" options="{'no_create': True}" string="Comité" modifiers="{'readonly': [('id', '!=', False)]}"/>-->
                           <!-- Liste déroulante pour la sélection du comité -->

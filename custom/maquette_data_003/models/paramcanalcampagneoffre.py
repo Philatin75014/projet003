@@ -1,4 +1,5 @@
 from odoo import models, fields, api, exceptions
+import json
 from .utils.datasource import get_param_canal_campagne_offre_data  # Import depuis le sous-répertoire
 from .utils.datasource import get_source_list_offre_potentielles  # Import depuis le sous-répertoire
 
@@ -13,7 +14,7 @@ class ParamCanalCampagneOffre(models.TransientModel):
     type_canal_label = fields.Char(string="Canal d'acquisition", compute='_compute_type_canal_label')    
     #code_source = fields.Selection(selection='_get_prestataires', string='Code Source')  # Liste déroulante basée sur prestataire.reference
     #code_source_label = fields.Char(string='Source', compute='_compute_code_source_label')
-
+    prest_id = fields.Many2one('prestataire.reference', string="Prestataire")
     #code_source = fields.Char(string='Code Source')  # Liste déroulante basée sur prestataire.reference
     #code_source_label = fields.Char(string='Source', compute='_compute_code_source_label')
     code_source = fields.Selection(selection='_get_prestataires', string='Code Source', required=True)
@@ -30,13 +31,46 @@ class ParamCanalCampagneOffre(models.TransientModel):
     code_operation_campagne = fields.Char(string='Code Opération Campagne')
     code_mission_offre = fields.Char(string='Code Mission Offre')
     #libelle_total_mission_offre = fields.Char(string="Mission Offre")  # Nouveau champ
-    libelle_total_mission_offre = fields.Selection([], string="Mission Offre")  # Champ liste déroulante avec une liste vide par défaut
+    #variable pour stocker les offres potentielles
+    # Ici, on initialise la liste dans le constructeur
+    libelle_total_mission_offre = fields.Selection(selection='_get_dynamic_offres_potentielles', string="Mission Offre")  # Champ liste déroulante avec une liste vide par défaut
 
 
     #code_offre = fields.Char(string='Code Offre')
     date_debut_ope = fields.Date(string='Date Début Opération', required=True)
     date_fin_ope = fields.Date(string='Date Fin Opération', required=True)
     
+    # Champ pour stocker dynamiquement les offres potentielles sous forme de texte
+    #dynamic_offres_potentielles = fields.Text()
+    dynamic_offres_potentielles = fields.Text(string="Offres Potentielles", default='[]')  # Initialisé en JSON vide
+
+    # Méthode pour générer dynamiquement la deuxième liste
+    #@api.depends('comite_selection')  # Utilise ce décorateur
+    def _get_dynamic_offres_potentielles(self):
+        # Charger les données stockées dans le champ Text
+        #        return eval(self.dynamic_offres_potentielles or '[]')
+        #return eval(self.dynamic_offres_potentielles or "[(0, 'Pas d offres disponibles')]")
+        #print(f"Offres dans _get_dynamic_offres_potentielles : {offres}")  # Debug
+        #return self.get_dynamic_offres() or [('0', 'Aucune offre disponible')]
+        offres = self.get_dynamic_offres()  # Récupère les données désérialisées
+        print(f"Offres récupérées : {offres}")  # Debugging pour voir les données
+        #return offres # or [('0', 'Aucune offre disponible')]  # Si aucune offre, renvoie une valeur par défaut
+        return [('A0D36', 'Offre Test 1'), ('A0D35', 'Offre Test 2')]
+    
+
+    def get_dynamic_offres(self):
+     if self.dynamic_offres_potentielles:
+       # return json.loads(self.dynamic_offres_potentielles)
+          # Désérialiser et convertir les données correctement
+        return [(item[0], item[1]) for item in json.loads(self.dynamic_offres_potentielles)]
+     else:
+        return []
+
+    #@api.model
+    #def init(self):
+    #    """Méthode pour charger les données lors de l'initialisation du modèle."""
+    #    self.dynamic_offres_potentielles = []  # Liste propre à chaque instance
+
 
     @api.model
     def load_data_from_sql(self, code_comite):
@@ -70,6 +104,11 @@ class ParamCanalCampagneOffre(models.TransientModel):
             else:
              raise ValueError("Le code source {} n'existe pas dans les données de référence.".format(record.get('CODE_SOURCE')))
      # Méthode pour obtenir les prestataires sous forme de liste déroulante
+    @api.onchange('prest_id')
+    def _onchange_prest_id(self):
+        if not self.prest_id:
+            # Recherche le premier prestataire par exemple, si aucun n'est sélectionné
+            self.prest_id = self.env['prestataire.reference'].search([], limit=1)
     @api.model
     def _get_prestataires(self):
         prestataires = self.env['prestataire.reference'].search([])
@@ -81,7 +120,7 @@ class ParamCanalCampagneOffre(models.TransientModel):
         comites = self.env['comite.reference'].search([])
         return [(comite.code_comite, comite.code_comite_nom) for comite in comites]
     
-        
+
     # Méthode pour obtenir les comités sous forme de liste déroulante
     @api.model
     def _get_comites(self):
@@ -107,6 +146,13 @@ class ParamCanalCampagneOffre(models.TransientModel):
                 record.type_canal_label = 'PA STREET'
             else:
                 record.type_canal_label = record.type_canal  # Si aucune correspondance, afficher la valeur brute
+
+    #@api.model
+    #def _get_offres_potentielles(self):
+    #    """Récupérer les offres potentielles."""
+    #    self._onchange_comite_selection()
+        #return self.dynamic_offres_potentielles
+            
 
     @api.model
     def create(self, vals):
@@ -158,48 +204,95 @@ class ParamCanalCampagneOffre(models.TransientModel):
                     raise exceptions.ValidationError(
                         "La date de début de l'opération ne peut pas être plus récente que la date de fin."
                     )
-                
+
     @api.onchange('comite_selection')
     def _onchange_comite_selection(self):
-      if self.comite_selection:
-       # Extraire le code_comite à partir de la sélection
+     if self.comite_selection:
+        offres_potentielles = get_source_list_offre_potentielles(self.comite_selection)
+        self.dynamic_offres_potentielles = json.dumps([
+            (offre.get('code_mission_offre'), offre.get('libelle_total'))
+            for offre in offres_potentielles
+        ])
+        print(f"Données enregistrées dans dynamic_offres_potentielles : {self.dynamic_offres_potentielles}")
+         # Appeler explicitement la méthode pour mettre à jour libelle_total_mission_offre
+        self.libelle_total_mission_offre = None  # Réinitialiser pour forcer la mise à jour
+        self._get_dynamic_offres_potentielles()  # Appel direct
+        
+
+     else:
+        self.dynamic_offres_potentielles = json.dumps([])
+       
+"""
+    @api.onchange('comite_selection')
+    def _onchange_comite_selection(self):
+        if self.comite_selection:
+            # Extraire le code_comite à partir de la sélection
             code_comite_selection = self.comite_selection.split(' ')[0]
             # Appeler la méthode pour récupérer le dictionnaire des offres potentielles
             offres_potentielles = get_source_list_offre_potentielles(code_comite_selection)
             print(f"Offres potentielles récupérées : {offres_potentielles}")
+
             if offres_potentielles:
-            # Créer une liste d'options pour remplir la liste déroulante
-             options = [
-                (f"{offre.get('code_campagne')}_{offre.get('code_mission_offre')}_{offre.get('libelle_off')}", offre.get('libelle_total'))  # Clé unique = code_campagne + code_offre
-                for offre in offres_potentielles
-            ]
-              # Mettre à jour les options du champ de sélection
-             self._fields['libelle_total_mission_offre'].selection = options
-             self.libelle_total_mission_offre = options[0][0] if options else False  # Prend la clé de la première option
-             #  Mettre à jour la liste déroulante et stocker les offres dans un dictionnaire de session
-             """"
-             self.libelle_total_mission_offre = options[0][0] if options else False  # Prend la clé de la première option
-            # Stocker les informations supplémentaires dans le dictionnaire de session
-             self.session_store = {
-                offre['libelle_total']: {
-                    'code_campagne': offre.get('code_campagne'),
-                    'code_mission_offre': offre.get('code_mission_offre'),
-                    'libelle_off': offre.get('libelle_off'),  # LIBELLE_OFF si nécessaire
-                    'autre_champ': offre.get('autre_champ')  # Ajouter tous les champs supplémentaires que vous voulez
-                } 
-                for offre in offres_potentielles
-            }"""
+                # Créer une liste d'options pour remplir la liste déroulante
+                #temp_offres_potentielles = [
+                #    (f"{offre.get('code_campagne')}_{offre.get('code_mission_offre')}_{offre.get('libelle_off')}", offre.get('libelle_total'))
+                #    for offre in offres_potentielles
+                #]
+                  # Créer une liste d'options pour remplir la liste déroulante
+                temp_offres_potentielles = []
+                
+                for offre in offres_potentielles:
+                # Nettoyage des valeurs
+                 code_comite = code_comite_selection.strip()  # Supprimer les espaces et caractères invisibles
+                 code_campagne = offre.get('code_campagne', '').strip()  # Supprimer les espaces et caractères invisibles
+                 code_mission_offre = offre.get('code_mission_offre', '').strip()
+                 #libelle_off = offre.get('libelle_off', '').strip()
+                
+                    # Assurer qu'il n'y a pas de caractères accentués ou spéciaux dans les clés
+                 code_campagne = code_campagne.encode('ascii', 'ignore').decode('ascii')   
+                 code_campagne = code_campagne.encode('ascii', 'ignore').decode('ascii')
+                 code_mission_offre = code_mission_offre.encode('ascii', 'ignore').decode('ascii')
+                 
+
+                 # Truncate la clé si elle est trop longue (par sécurité, 50 caractères max)
+                 combined_key = f"{code_comite}{code_campagne}{code_mission_offre}"
+                 combined_key = combined_key[:50]  # Limiter la longueur à 50 caractères
+
+                # Ajouter l'option si tout est correct
+                 #temp_offres_potentielles.append(
+                    # (combined_key, offre.get('libelle_total'))
+                 #    (combined_key, 'libelle')
+                 #)
+                 
+                
+                temp_offres_potentielles.append(
+                    # (combined_key, offre.get('libelle_total'))
+                     (1, 'libelle1')
+                 )
+                temp_offres_potentielles.append(
+                    # (combined_key, offre.get('libelle_total'))
+                     (2, 'libelle2')
+                 )
+
+                  # Stocker la liste sous forme de texte dans le champ Text
+                self.dynamic_offres_potentielles = str(temp_offres_potentielles)
+                # Mettre à jour la deuxième liste déroulante
+                self.libelle_total_mission_offre = temp_offres_potentielles[0][0] if temp_offres_potentielles else False
+                #print(f"Valeur actuelle de libelle_total_mission_offre : {self.libelle_total_mission_offre}")
+
             else:
                 # Réinitialiser si aucune offre trouvée
+                self.dynamic_offres_potentielles = '[]'
                 self.libelle_total_mission_offre = False
-                self.session_store = {}
-      else:
-          # Réinitialiser tout si aucun comité sélectionné
+        else:
+            # Réinitialiser tout si aucun comité sélectionné
+            self.dynamic_offres_potentielles = '[]'
             self.libelle_total_mission_offre = False
-            self.session_store = {}
 
+"""
+"""
 @api.onchange('libelle_total_mission_offre')
-def _onchange_libelle_total_mission_offre(self):
+def _onchange_mission_offre(self):
     if self.libelle_total_mission_offre:
         # Extraire les composants de la valeur sélectionnée
         parts = self.libelle_total_mission_offre.split('_')  # Exemple : "code_campagne_code_mission_offre_libelle_off"
@@ -222,3 +315,4 @@ def _onchange_libelle_total_mission_offre(self):
         self.code_mission_offre = ''
         self.libelle_operation = ''
         print("Aucune offre sélectionnée.")
+        """
